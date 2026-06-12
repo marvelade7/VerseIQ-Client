@@ -41,7 +41,6 @@ const Dashboard = () => {
             new: "New Testament",
             mixed: "mixed",
         };
-        // you'll use these values when calling your quiz API
         let count = numQuestions;
         let category = categoryMap[testament];
         const credentials = { difficulty, count, category };
@@ -58,14 +57,13 @@ const Dashboard = () => {
                 },
             )
             .then((response) => {
-                console.log("Quiz started:", response.data);
-                console.log("full response.data:", JSON.stringify(response.data));
+                // console.log("Quiz started:", response.data);
+                // console.log("full response.data:", JSON.stringify(response.data));
                 setIsStartingQuiz(false);
                 setShowModal(false);
                 navigate("/quiz", {
                     state: {
                         quizSessionId: response.data.data.sessionId,
-                        // sessionId: response.data.data.sessionId,    
                         questionIds: response.data.data.questions,
                         timePerQuestion: TIME_PER_QUESTION[difficulty],
                     },
@@ -78,7 +76,6 @@ const Dashboard = () => {
                 );
                 setIsStartingQuiz(false);
                 setError("Failed to start quiz. Please try again.");
-                // handle error (e.g., show notification)
             });
     };
 

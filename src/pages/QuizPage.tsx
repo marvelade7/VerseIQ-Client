@@ -1,5 +1,5 @@
 // src/pages/QuizPage.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
@@ -35,6 +35,9 @@ const QuizPage = () => {
 
     const token = localStorage.getItem("verseiq_token");
 
+    const questionsRef = useRef<Question[]>([]);
+    const selectedAnswersRef = useRef<Record<string, string>>({});
+
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<
@@ -45,6 +48,15 @@ const QuizPage = () => {
     const [timeLeft, setTimeLeft] = useState(
         questionIds.length * timePerQuestion,
     );
+    const [showDetails, setShowDetails] = useState(false);
+
+    useEffect(() => {
+        questionsRef.current = questions;
+    }, [questions]);
+
+    useEffect(() => {
+        selectedAnswersRef.current = selectedAnswers;
+    }, [selectedAnswers]);
 
     // fetch all questions using their IDs
     useEffect(() => {
@@ -110,11 +122,14 @@ const QuizPage = () => {
     };
 
     const handleSubmit = () => {
+        const currentQuestions = questionsRef.current;
+        const currentAnswers = selectedAnswersRef.current;
+
+        if (currentQuestions.length === 0) return;
         setIsSubmitting(true);
 
-        // build answers array from selectedAnswers
-        const answers = questions.map((q) => {
-            const selectedOptionId = selectedAnswers[q._id];
+        const answers = currentQuestions.map((q) => {
+            const selectedOptionId = currentAnswers[q._id];
             const selectedOption = q.options.find(
                 (o) => o._id === selectedOptionId,
             );
@@ -127,13 +142,13 @@ const QuizPage = () => {
         });
 
         const correctAnswers = answers.filter((a) => a.isCorrect).length;
-        const score = Math.round((correctAnswers / totalQuestions) * 100);
+        const totalQ = currentQuestions.length;
+        const score = Math.round((correctAnswers / totalQ) * 100);
         const accuracy = score;
         const timeTaken = questionIds.length * timePerQuestion - timeLeft;
 
         axios
             .put(
-                // `http://localhost:4576/api/quiz-sessions/update/${quizSessionId}`,
                 `https://verseiq-server.onrender.com/api/quiz-sessions/update/${quizSessionId}`,
                 {
                     score,
@@ -147,7 +162,7 @@ const QuizPage = () => {
                 { headers: { Authorization: `Bearer ${token}` } },
             )
             .then((res) => {
-                console.log("Submit response:", res.data)
+                console.log("Submit response:", res.data);
                 setIsSubmitting(false);
                 updateUser(res.data.user);
                 setResult({
@@ -242,11 +257,11 @@ const QuizPage = () => {
                 </div>
 
                 {/* Bible reference if available */}
-                {currentQuestion.reference && (
+                {/* {currentQuestion.reference && (
                     <p className="text-xs text-gray-400 mt-4 italic">
                         📖 {currentQuestion.reference}
                     </p>
-                )}
+                )} */}
             </div>
 
             {/* Prev / Next / Submit buttons */}
@@ -286,26 +301,121 @@ const QuizPage = () => {
             </div>
             {result && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md mx-4 text-center">
-                        <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">
-                            Quiz Complete! 🎉
-                        </h2>
-                        <p className="text-4xl font-bold text-[#7C3AED] mb-2">
-                            {result.score}%
-                        </p>
-                        <p className="text-gray-600 mb-1">
-                            {result.correctAnswers} / {result.totalQuestions}{" "}
-                            correct
-                        </p>
-                        <p className="text-gray-400 text-sm mb-6">
-                            Time taken: {result.timeTaken}s
-                        </p>
-                        <button
-                            onClick={() => navigate("/dashboard")}
-                            className="bg-[#7C3AED] text-white py-2 px-6 rounded-md font-semibold hover:bg-[#6D28D9] transition-colors"
-                        >
-                            Back to Dashboard
-                        </button>
+                    <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md mx-4 text-center max-h-[90vh] overflow-y-auto">
+                        {!showDetails ? (
+                            <>
+                                <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">
+                                    Quiz Complete! 🎉
+                                </h2>
+                                <p className="text-4xl font-bold text-[#7C3AED] mb-2">
+                                    {result.score}%
+                                </p>
+                                <p className="text-gray-600 mb-1">
+                                    {result.correctAnswers} /{" "}
+                                    {result.totalQuestions} correct
+                                </p>
+                                <p className="text-gray-400 text-sm mb-6">
+                                    Time taken: {result.timeTaken}s
+                                </p>
+                                <div className="flex flex-col gap-3">
+                                    <button
+                                        onClick={() => setShowDetails(true)}
+                                        className="bg-[#7C3AED] text-white py-2 px-6 rounded-md font-semibold hover:bg-[#6D28D9] transition-colors"
+                                    >
+                                        View Details
+                                    </button>
+                                    <button
+                                        onClick={() => navigate("/dashboard")}
+                                        className="border border-[#7C3AED] text-[#7C3AED] py-2 px-6 rounded-md font-semibold hover:bg-purple-50 transition-colors"
+                                    >
+                                        Back to Dashboard
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <h2 className="text-xl font-bold text-[#7C3AED] mb-4">
+                                    Result Details
+                                </h2>
+                                <div className="flex flex-col gap-4 text-left">
+                                    {questions.map((q, index) => {
+                                        const selectedOptionId =
+                                            selectedAnswers[q._id];
+                                        const isCorrect =
+                                            q.options.find(
+                                                (o) =>
+                                                    o._id === selectedOptionId,
+                                            )?.isCorrect ?? false;
+                                        const correctOption = q.options.find(
+                                            (o) => o.isCorrect,
+                                        );
+
+                                        return (
+                                            <div
+                                                key={q._id}
+                                                className={`p-4 rounded-lg border-2 ${
+                                                    isCorrect
+                                                        ? "border-green-400 bg-green-50"
+                                                        : "border-red-400 bg-red-50"
+                                                }`}
+                                            >
+                                                <p className="text-sm font-semibold text-gray-800 mb-2">
+                                                    {index + 1}.{" "}
+                                                    {q.questionText}
+                                                </p>
+                                                {/* show all options */}
+                                                {q.options.map((o) => {
+                                                    const isSelected =
+                                                        o._id ===
+                                                        selectedOptionId;
+                                                    const isCorrectOption =
+                                                        o.isCorrect;
+                                                    return (
+                                                        <p
+                                                            key={o._id}
+                                                            className={`text-sm py-1 px-2 rounded mb-1 ${
+                                                                isCorrectOption
+                                                                    ? "bg-green-200 text-green-800 font-medium"
+                                                                    : isSelected &&
+                                                                        !isCorrectOption
+                                                                      ? "bg-red-200 text-red-800 line-through"
+                                                                      : "text-gray-600"
+                                                            }`}
+                                                        >
+                                                            {o.optionText}
+                                                            {isCorrectOption &&
+                                                                " ✓"}
+                                                            {isSelected &&
+                                                                !isCorrectOption &&
+                                                                " ✗"}
+                                                        </p>
+                                                    );
+                                                })}
+                                                {q.reference && (
+                                                    <p className="text-xs text-gray-400 mt-2 italic">
+                                                        📖 {q.reference}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className="flex flex-col gap-3 mt-6">
+                                    <button
+                                        onClick={() => setShowDetails(false)}
+                                        className="border border-[#7C3AED] text-[#7C3AED] py-2 px-6 rounded-md font-semibold hover:bg-purple-50 transition-colors"
+                                    >
+                                        Back to Summary
+                                    </button>
+                                    <button
+                                        onClick={() => navigate("/dashboard")}
+                                        className="bg-[#7C3AED] text-white py-2 px-6 rounded-md font-semibold hover:bg-[#6D28D9] transition-colors"
+                                    >
+                                        Back to Dashboard
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

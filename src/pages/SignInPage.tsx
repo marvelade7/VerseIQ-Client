@@ -27,7 +27,7 @@ const SignInPage = () => {
             .then((response) => {
                 navigate("/dashboard");
                 login(response.data);
-                console.log("Login successful:", response.data);
+                // console.log("Login successful:", response.data);
                 setIsLoading(false);
             })
             .catch((error) => {
