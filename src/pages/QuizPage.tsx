@@ -162,7 +162,7 @@ const QuizPage = () => {
                 { headers: { Authorization: `Bearer ${token}` } },
             )
             .then((res) => {
-                console.log("Submit response:", res.data);
+                // console.log("Submit response:", res.data);
                 setIsSubmitting(false);
                 updateUser(res.data.user);
                 setResult({
@@ -255,13 +255,6 @@ const QuizPage = () => {
                         );
                     })}
                 </div>
-
-                {/* Bible reference if available */}
-                {/* {currentQuestion.reference && (
-                    <p className="text-xs text-gray-400 mt-4 italic">
-                        📖 {currentQuestion.reference}
-                    </p>
-                )} */}
             </div>
 
             {/* Prev / Next / Submit buttons */}
@@ -346,7 +339,7 @@ const QuizPage = () => {
                                                 (o) =>
                                                     o._id === selectedOptionId,
                                             )?.isCorrect ?? false;
-                                        const correctOption = q.options.find(
+                                        q.options.find(
                                             (o) => o.isCorrect,
                                         );
 
