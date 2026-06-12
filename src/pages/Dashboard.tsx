@@ -48,8 +48,8 @@ const Dashboard = () => {
         setIsStartingQuiz(true);
         axios
             .post(
-                // "https://verseiq-server.onrender.com/api/quiz-sessions/start",
-                "http://localhost:4576/api/quiz-sessions/start",
+                "https://verseiq-server.onrender.com/api/quiz-sessions/start",
+                // "http://localhost:4576/api/quiz-sessions/start",
                 credentials,
                 {
                     headers: {

@@ -50,8 +50,8 @@ const QuizPage = () => {
     useEffect(() => {
         axios
             .post(
-                "http://localhost:4576/api/questions/by-ids",
-                // "https://verseiq-server.onrender.com/api/questions/by-ids",
+                // "http://localhost:4576/api/questions/by-ids",
+                "https://verseiq-server.onrender.com/api/questions/by-ids",
                 { ids: questionIds },
                 { headers: { Authorization: `Bearer ${token}` } },
             )
@@ -133,8 +133,8 @@ const QuizPage = () => {
 
         axios
             .put(
-                `http://localhost:4576/api/quiz-sessions/update/${quizSessionId}`,
-                // `https://verseiq-server.onrender.com/api/quiz-sessions/${quizSessionId}`,
+                // `http://localhost:4576/api/quiz-sessions/update/${quizSessionId}`,
+                `https://verseiq-server.onrender.com/api/quiz-sessions/update/${quizSessionId}`,
                 {
                     score,
                     correctAnswers,
@@ -146,10 +146,6 @@ const QuizPage = () => {
                 },
                 { headers: { Authorization: `Bearer ${token}` } },
             )
-            // .then((res) => {
-            //     console.log("Quiz submitted:", res.data);
-            //     // navigate("/results", { state: { quizSessionId } }); // go to results page
-            // })
             .then((res) => {
                 console.log("Submit response:", res.data)
                 setIsSubmitting(false);
