@@ -7,7 +7,12 @@ import { useNavigate } from "react-router-dom";
 type Difficulty = "easy" | "medium" | "hard" | "mixed";
 type Testament = "old" | "new" | "mixed";
 
-const TIME_PER_QUESTION = 20;
+const TIME_PER_QUESTION: Record<Difficulty, number> = {
+    easy: 5,
+    medium: 10,
+    hard: 15,
+    mixed: 10,
+};
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -22,7 +27,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("verseiq_token");
 
     // automatically calculates total time whenever difficulty or numQuestions changes
-    const totalSeconds = TIME_PER_QUESTION * numQuestions;
+    const totalSeconds = TIME_PER_QUESTION[difficulty] * numQuestions;
     const totalMinutes = Math.floor(totalSeconds / 60);
     const remainingSeconds = totalSeconds % 60;
     const timeDisplay =
@@ -31,9 +36,14 @@ const Dashboard = () => {
             : `${totalMinutes} min ${remainingSeconds} sec`;
 
     const handleStartQuiz = () => {
+        const categoryMap: Record<Testament, string> = {
+            old: "Old Testament",
+            new: "New Testament",
+            mixed: "mixed",
+        };
         // you'll use these values when calling your quiz API
         let count = numQuestions;
-        let category = testament;
+        let category = categoryMap[testament];
         const credentials = { difficulty, count, category };
         setIsStartingQuiz(true);
         axios
@@ -49,12 +59,15 @@ const Dashboard = () => {
             )
             .then((response) => {
                 console.log("Quiz started:", response.data);
+                console.log("full response.data:", JSON.stringify(response.data));
                 setIsStartingQuiz(false);
                 setShowModal(false);
                 navigate("/quiz", {
                     state: {
-                        quizSessionId: response.data._id,
+                        quizSessionId: response.data.data.sessionId,
+                        // sessionId: response.data.data.sessionId,    
                         questionIds: response.data.data.questions,
+                        timePerQuestion: TIME_PER_QUESTION[difficulty],
                     },
                 });
             })
@@ -219,14 +232,13 @@ const Dashboard = () => {
                                 {timeDisplay}
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
-                                {TIME_PER_QUESTION}s per question ×{" "}
-                                {numQuestions} questions
+                                {TIME_PER_QUESTION[difficulty]}s per question × {numQuestions} questions
                             </p>
                         </div>
 
                         <button
                             onClick={handleStartQuiz}
-                            disabled={isStartingQuiz} // 👈 prevent double clicks
+                            disabled={isStartingQuiz}
                             className="bg-[#7C3AED] text-white py-2 w-full rounded-md font-semibold hover:bg-[#6D28D9] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                         >
                             {isStartingQuiz ? (

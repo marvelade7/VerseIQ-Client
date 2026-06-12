@@ -18,14 +18,20 @@ interface AuthContextType {
     token: string | null;
     login: (data: { token: string; user: User }) => void;
     logout: () => void;
+    updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(() => {
+        // const saved = localStorage.getItem("verseiq_user");
         const saved = localStorage.getItem("verseiq_user");
-        return saved ? JSON.parse(saved) : null;
+try {
+    return saved && saved !== "undefined" ? JSON.parse(saved) : null;
+} catch {
+    return null;
+}
     });
 
     const [token, setToken] = useState<string | null>(
@@ -46,8 +52,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem("verseiq_user");
     };
 
+    const updateUser = (updatedUser: User) => {
+        setUser(updatedUser);
+        localStorage.setItem("verseiq_user", JSON.stringify(updatedUser));
+    };
+
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

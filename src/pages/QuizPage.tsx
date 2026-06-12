@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 interface Option {
     _id: string;
@@ -22,21 +23,28 @@ interface Question {
 const QuizPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { updateUser } = useAuth();
 
     // sessionId and question IDs passed from Dashboard via navigate
-    const { sessionId, questionIds } = location.state as {
-        sessionId: string;
+    const { quizSessionId, questionIds, timePerQuestion } = location.state as {
+        quizSessionId: string;
         questionIds: string[];
+        timePerQuestion: number;
     };
+    // console.log("location.state:", location.state);
 
     const token = localStorage.getItem("verseiq_token");
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // { questionId: optionId }
+    const [selectedAnswers, setSelectedAnswers] = useState<
+        Record<string, string>
+    >({}); // { questionId: optionId }
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(questionIds.length * 20); // 20s per question
+    const [timeLeft, setTimeLeft] = useState(
+        questionIds.length * timePerQuestion,
+    );
 
     // fetch all questions using their IDs
     useEffect(() => {
@@ -45,7 +53,7 @@ const QuizPage = () => {
                 "http://localhost:4576/api/questions/by-ids",
                 // "https://verseiq-server.onrender.com/api/questions/by-ids",
                 { ids: questionIds },
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}` } },
             )
             .then((res) => {
                 setQuestions(res.data.data);
@@ -77,9 +85,18 @@ const QuizPage = () => {
         ? !!selectedAnswers[currentQuestion._id]
         : false;
 
+    const [result, setResult] = useState<null | {
+        score: number;
+        correctAnswers: number;
+        totalQuestions: number;
+        timeTaken: number;
+    }>(null);
+
     // format time as mm:ss
     const formatTime = (seconds: number) => {
-        const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+        const m = Math.floor(seconds / 60)
+            .toString()
+            .padStart(2, "0");
         const s = (seconds % 60).toString().padStart(2, "0");
         return `${m}:${s}`;
     };
@@ -98,7 +115,9 @@ const QuizPage = () => {
         // build answers array from selectedAnswers
         const answers = questions.map((q) => {
             const selectedOptionId = selectedAnswers[q._id];
-            const selectedOption = q.options.find((o) => o._id === selectedOptionId);
+            const selectedOption = q.options.find(
+                (o) => o._id === selectedOptionId,
+            );
             const isCorrect = selectedOption?.isCorrect ?? false;
             return {
                 question: q._id,
@@ -110,12 +129,12 @@ const QuizPage = () => {
         const correctAnswers = answers.filter((a) => a.isCorrect).length;
         const score = Math.round((correctAnswers / totalQuestions) * 100);
         const accuracy = score;
-        const timeTaken = questionIds.length * 20 - timeLeft; // seconds used
+        const timeTaken = questionIds.length * timePerQuestion - timeLeft;
 
         axios
             .put(
-                `http://localhost:4576/api/quiz-sessions/update/${sessionId}`,
-                // `https://verseiq-server.onrender.com/api/quiz-sessions/${sessionId}`,
+                `http://localhost:4576/api/quiz-sessions/update/${quizSessionId}`,
+                // `https://verseiq-server.onrender.com/api/quiz-sessions/${quizSessionId}`,
                 {
                     score,
                     correctAnswers,
@@ -125,11 +144,22 @@ const QuizPage = () => {
                     timeTaken,
                     answers,
                 },
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}` } },
             )
+            // .then((res) => {
+            //     console.log("Quiz submitted:", res.data);
+            //     // navigate("/results", { state: { quizSessionId } }); // go to results page
+            // })
             .then((res) => {
-                console.log("Quiz submitted:", res.data);
-                navigate("/results", { state: { sessionId } }); // go to results page
+                console.log("Submit response:", res.data)
+                setIsSubmitting(false);
+                updateUser(res.data.user);
+                setResult({
+                    score: res.data.data.score,
+                    correctAnswers: res.data.data.correctAnswers,
+                    totalQuestions: res.data.data.totalQuestions,
+                    timeTaken: res.data.data.timeTaken,
+                });
             })
             .catch((err) => {
                 console.error("Failed to submit quiz:", err);
@@ -155,17 +185,22 @@ const QuizPage = () => {
 
     return (
         <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center py-10 px-4">
-
             {/* Header — progress and timer */}
             <div className="w-full max-w-2xl flex items-center justify-between mb-6">
                 <p className="text-sm text-gray-500 font-medium">
                     Question{" "}
-                    <span className="text-[#7C3AED] font-bold">{currentIndex + 1}</span>
-                    {" "}of{" "}
-                    <span className="text-[#7C3AED] font-bold">{totalQuestions}</span>
+                    <span className="text-[#7C3AED] font-bold">
+                        {currentIndex + 1}
+                    </span>{" "}
+                    of{" "}
+                    <span className="text-[#7C3AED] font-bold">
+                        {totalQuestions}
+                    </span>
                 </p>
                 {/* timer turns red when under 30 seconds */}
-                <p className={`font-bold text-lg ${timeLeft <= 30 ? "text-red-500" : "text-[#7C3AED]"}`}>
+                <p
+                    className={`font-bold text-lg ${timeLeft <= 30 ? "text-red-500" : "text-[#7C3AED]"}`}
+                >
                     ⏱ {formatTime(timeLeft)}
                 </p>
             </div>
@@ -174,7 +209,9 @@ const QuizPage = () => {
             <div className="w-full max-w-2xl bg-gray-200 rounded-full h-2 mb-8">
                 <div
                     className="bg-[#7C3AED] h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
+                    style={{
+                        width: `${((currentIndex + 1) / totalQuestions) * 100}%`,
+                    }}
                 />
             </div>
 
@@ -251,6 +288,31 @@ const QuizPage = () => {
                     </button>
                 )}
             </div>
+            {result && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md mx-4 text-center">
+                        <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">
+                            Quiz Complete! 🎉
+                        </h2>
+                        <p className="text-4xl font-bold text-[#7C3AED] mb-2">
+                            {result.score}%
+                        </p>
+                        <p className="text-gray-600 mb-1">
+                            {result.correctAnswers} / {result.totalQuestions}{" "}
+                            correct
+                        </p>
+                        <p className="text-gray-400 text-sm mb-6">
+                            Time taken: {result.timeTaken}s
+                        </p>
+                        <button
+                            onClick={() => navigate("/dashboard")}
+                            className="bg-[#7C3AED] text-white py-2 px-6 rounded-md font-semibold hover:bg-[#6D28D9] transition-colors"
+                        >
+                            Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
