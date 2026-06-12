@@ -112,12 +112,18 @@ const Dashboard = () => {
             </div>
 
             {/* Start Quiz Button */}
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
                 <button
-                    onClick={() => setShowModal(true)} // 👈 opens the modal
-                    className="bg-[#7C3AED] text-white py-2 px-4 rounded-md hover:bg-[#6D28D9] transition-colors duration-300 mt-8"
+                    onClick={() => setShowModal(true)}
+                    className="bg-[#7C3AED] cursor-pointer text-white py-2 px-4 rounded-md hover:bg-[#6D28D9] transition-colors duration-300 mt-8"
                 >
                     Start Quiz
+                </button>
+                <button
+                    onClick={() => navigate("/history")}
+                    className="border border-[#7C3AED] cursor-pointer text-[#7C3AED] py-2 px-4 rounded-md hover:bg-purple-50 transition-colors duration-300 mt-8"
+                >
+                    Quiz History
                 </button>
             </div>
 
@@ -229,7 +235,8 @@ const Dashboard = () => {
                                 {timeDisplay}
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
-                                {TIME_PER_QUESTION[difficulty]}s per question × {numQuestions} questions
+                                {TIME_PER_QUESTION[difficulty]}s per question ×{" "}
+                                {numQuestions} questions
                             </p>
                         </div>
 

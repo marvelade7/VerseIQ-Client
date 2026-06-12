@@ -5,6 +5,7 @@ import SignInPage from "./pages/SignInPage";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import QuizPage from "./pages/QuizPage";
+import QuizHistory from "./pages/QuizHistory";
 
 const App = () => {
     const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
@@ -26,6 +27,7 @@ const App = () => {
                         path="/quiz"
                         element={<ProtectedRoute element={<QuizPage />} />}
                     />
+                    <Route path='/history' element={<ProtectedRoute element={<QuizHistory />} />} />
                 </Routes>
             </AuthProvider>
         </>
