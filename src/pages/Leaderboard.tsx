@@ -77,7 +77,7 @@ const Leaderboard = () => {
 
             {/* Your rank banner */}
             {currentUserRank > 0 && (
-                <div className="bg-gradient-to-r from-[#7C3AED] to-[#9F67FA] rounded-2xl p-5 mb-6 flex items-center gap-4 text-white shadow-lg shadow-purple-200">
+                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] rounded-2xl p-5 mb-6 flex items-center gap-4 text-white shadow-lg shadow-purple-200">
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                         <TrendingUp size={22} />
                     </div>
@@ -133,7 +133,7 @@ const Leaderboard = () => {
                                         <RankBadge rank={entry.rank} />
                                     </div>
                                     <div className="col-span-4 flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                        <div className="w-9 h-9 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-xs font-bold shrink-0">
                                             {entry.firstName[0]}
                                             {entry.lastName[0]}
                                         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { History as HistoryIcon, Loader2, CheckCircle2, XCircle, Clock, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
+import { History as HistoryIcon, Loader2, CheckCircle2, XCircle, Clock, ChevronDown, ChevronUp } from "lucide-react";
 
 interface QuizSession {
     _id: string;

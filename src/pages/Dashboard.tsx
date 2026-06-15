@@ -312,7 +312,7 @@ const ActionCard = ({
         onClick={onClick}
         className={`w-full text-left rounded-2xl p-6 flex items-start gap-4 transition-all duration-200 group border ${
             variant === "primary"
-                ? "bg-gradient-to-br from-[#7C3AED] to-[#9F67FA] border-transparent text-white shadow-lg shadow-purple-200 hover:shadow-xl hover:shadow-purple-300 hover:-translate-y-0.5"
+                ? "bg-linear-to-br from-[#7C3AED] to-[#9F67FA] border-transparent text-white shadow-lg shadow-purple-200 hover:shadow-xl hover:shadow-purple-300 hover:-translate-y-0.5"
                 : "bg-white border-gray-100 text-gray-800 shadow-sm hover:shadow-md hover:border-[#7C3AED]/30 hover:-translate-y-0.5"
         }`}
     >

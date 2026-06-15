@@ -117,7 +117,7 @@ const Profile = () => {
                 <div className="lg:col-span-1 space-y-4">
                     {/* Avatar card */}
                     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-2xl font-bold mb-4">
+                        <div className="w-20 h-20 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-2xl font-bold mb-4">
                             {user?.firstName?.[0]}{user?.lastName?.[0]}
                         </div>
                         <p className="font-bold text-gray-900 text-lg">

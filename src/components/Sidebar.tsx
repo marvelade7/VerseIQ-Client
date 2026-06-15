@@ -4,10 +4,8 @@ import {
     User,
     Trophy,
     History,
-    BookOpen,
     Settings,
     LogOut,
-    Zap,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 

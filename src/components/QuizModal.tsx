@@ -60,7 +60,7 @@ const QuizModal = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="bg-gradient-to-r from-[#7C3AED] to-[#9F67FA] px-8 py-6">
+                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] px-8 py-6">
                     <button
                         onClick={onClose}
                         className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
@@ -172,7 +172,7 @@ const QuizModal = ({
                     </div>
 
                     {/* Time estimate */}
-                    <div className="bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-100 rounded-xl p-4 flex items-center gap-4">
+                    <div className="bg-linear-to-r from-purple-50 to-violet-50 border border-purple-100 rounded-xl p-4 flex items-center gap-4">
                         <div className="w-10 h-10 bg-[#7C3AED]/10 rounded-xl flex items-center justify-center shrink-0">
                             <Clock size={18} className="text-[#7C3AED]" />
                         </div>
