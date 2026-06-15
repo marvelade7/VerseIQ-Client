@@ -27,11 +27,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(() => {
         // const saved = localStorage.getItem("verseiq_user");
         const saved = localStorage.getItem("verseiq_user");
-try {
-    return saved && saved !== "undefined" ? JSON.parse(saved) : null;
-} catch {
-    return null;
-}
+        try {
+            return saved && saved !== "undefined" ? JSON.parse(saved) : null;
+        } catch {
+            return null;
+        }
     });
 
     const [token, setToken] = useState<string | null>(
@@ -58,7 +58,9 @@ try {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
+        <AuthContext.Provider
+            value={{ user, token, login, logout, updateUser }}
+        >
             {children}
         </AuthContext.Provider>
     );

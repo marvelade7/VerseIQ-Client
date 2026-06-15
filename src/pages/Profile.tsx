@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import { User, Mail, Lock, Save, Loader2, CheckCircle2, BookMarked, Star, Flame } from "lucide-react";
+import {
+    User,
+    Mail,
+    Lock,
+    Save,
+    Loader2,
+    CheckCircle2,
+    BookMarked,
+    Star,
+    Flame,
+} from "lucide-react";
 
 const InputField = ({
     label,
@@ -21,9 +31,14 @@ const InputField = ({
     disabled?: boolean;
 }) => (
     <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            {label}
+        </label>
         <div className="relative">
-            <Icon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Icon
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+            />
             <input
                 type={type}
                 value={value}
@@ -59,7 +74,8 @@ const Profile = () => {
         setIsSavingInfo(true);
         axios
             .put(
-                "https://verseiq-server.onrender.com/api/users/profile",
+                "http://localhost:4576/api/users/profile",
+                // "https://verseiq-server.onrender.com/api/users/profile",
                 { firstName, lastName },
                 { headers: { Authorization: `Bearer ${token}` } },
             )
@@ -68,9 +84,13 @@ const Profile = () => {
                 setInfoSuccess("Profile updated successfully.");
                 if (updateUser) updateUser({ ...user, ...res.data.data });
             })
-            .catch(() => {
-                setIsSavingInfo(false);
-                setInfoError("Failed to update profile. Please try again.");
+            .catch((err) => {
+                console.log(err.response?.data);
+
+                setInfoError(
+                    err.response?.data?.message ||
+                        "Failed to update profile. Please try again.",
+                );
             });
     };
 
@@ -101,7 +121,9 @@ const Profile = () => {
             })
             .catch((err) => {
                 setIsSavingPassword(false);
-                setPwError(err.response?.data?.message ?? "Failed to change password.");
+                setPwError(
+                    err.response?.data?.message ?? "Failed to change password.",
+                );
             });
     };
 
@@ -109,7 +131,9 @@ const Profile = () => {
         <div>
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-                <p className="text-gray-500 mt-1">Manage your account information and password.</p>
+                <p className="text-gray-500 mt-1">
+                    Manage your account information and password.
+                </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -118,29 +142,59 @@ const Profile = () => {
                     {/* Avatar card */}
                     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center text-center">
                         <div className="w-20 h-20 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-2xl font-bold mb-4">
-                            {user?.firstName?.[0]}{user?.lastName?.[0]}
+                            {user?.firstName?.[0]}
+                            {user?.lastName?.[0]}
                         </div>
                         <p className="font-bold text-gray-900 text-lg">
                             {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-gray-400 text-sm mt-0.5">{user?.email}</p>
+                        <p className="text-gray-400 text-sm mt-0.5">
+                            {user?.email}
+                        </p>
                     </div>
 
                     {/* Stats */}
                     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-                        <h3 className="font-semibold text-gray-700 text-sm">Your Stats</h3>
+                        <h3 className="font-semibold text-gray-700 text-sm">
+                            Your Stats
+                        </h3>
                         {[
-                            { icon: BookMarked, label: "Quizzes Taken", value: user?.totalQuizTaken ?? 0, color: "#7C3AED" },
-                            { icon: Star, label: "Best Score", value: user?.bestScore ?? 0, color: "#F59E0B" },
-                            { icon: Flame, label: "Longest Streak", value: `${user?.longestStreak ?? 0} days`, color: "#EF4444" },
+                            {
+                                icon: BookMarked,
+                                label: "Quizzes Taken",
+                                value: user?.totalQuizTaken ?? 0,
+                                color: "#7C3AED",
+                            },
+                            {
+                                icon: Star,
+                                label: "Best Score",
+                                value: user?.bestScore ?? 0,
+                                color: "#F59E0B",
+                            },
+                            {
+                                icon: Flame,
+                                label: "Longest Streak",
+                                value: `${user?.longestStreak ?? 0} days`,
+                                color: "#EF4444",
+                            },
                         ].map(({ icon: Icon, label, value, color }) => (
-                            <div key={label} className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
+                            <div
+                                key={label}
+                                className="flex items-center gap-3"
+                            >
+                                <div
+                                    className="w-9 h-9 rounded-lg flex items-center justify-center"
+                                    style={{ backgroundColor: `${color}15` }}
+                                >
                                     <Icon size={16} style={{ color }} />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400">{label}</p>
-                                    <p className="font-bold text-gray-800">{value}</p>
+                                    <p className="text-xs text-gray-400">
+                                        {label}
+                                    </p>
+                                    <p className="font-bold text-gray-800">
+                                        {value}
+                                    </p>
                                 </div>
                             </div>
                         ))}
@@ -188,7 +242,9 @@ const Profile = () => {
                             </div>
                         )}
                         {infoError && (
-                            <p className="mt-4 text-red-500 text-sm bg-red-50 rounded-xl px-4 py-2.5">{infoError}</p>
+                            <p className="mt-4 text-red-500 text-sm bg-red-50 rounded-xl px-4 py-2.5">
+                                {infoError}
+                            </p>
                         )}
 
                         <button
@@ -196,7 +252,11 @@ const Profile = () => {
                             disabled={isSavingInfo}
                             className="mt-5 flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isSavingInfo ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
+                            {isSavingInfo ? (
+                                <Loader2 size={15} className="animate-spin" />
+                            ) : (
+                                <Save size={15} />
+                            )}
                             Save Changes
                         </button>
                     </div>
@@ -240,7 +300,9 @@ const Profile = () => {
                             </div>
                         )}
                         {pwError && (
-                            <p className="mt-4 text-red-500 text-sm bg-red-50 rounded-xl px-4 py-2.5">{pwError}</p>
+                            <p className="mt-4 text-red-500 text-sm bg-red-50 rounded-xl px-4 py-2.5">
+                                {pwError}
+                            </p>
                         )}
 
                         <button
@@ -248,7 +310,11 @@ const Profile = () => {
                             disabled={isSavingPassword}
                             className="mt-5 flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isSavingPassword ? <Loader2 size={15} className="animate-spin" /> : <Lock size={15} />}
+                            {isSavingPassword ? (
+                                <Loader2 size={15} className="animate-spin" />
+                            ) : (
+                                <Lock size={15} />
+                            )}
                             Update Password
                         </button>
                     </div>

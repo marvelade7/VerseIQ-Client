@@ -14,7 +14,7 @@ import Settings from "./pages/Settings";
 
 const App = () => {
     const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("verseiq_token");
         return token ? element : <Navigate to="/signin" replace />;
     };
     return (
@@ -24,7 +24,7 @@ const App = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<SignInPage />} />
-                    <Route element={<DashboardLayout />}>
+                    <Route element={<ProtectedRoute element={<DashboardLayout />} />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/leaderboard" element={<Leaderboard />} />
