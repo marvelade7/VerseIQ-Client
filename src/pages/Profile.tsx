@@ -74,8 +74,7 @@ const Profile = () => {
         setIsSavingInfo(true);
         axios
             .put(
-                "http://localhost:4576/api/users/profile",
-                // "https://verseiq-server.onrender.com/api/users/profile",
+                "https://verseiq-server.onrender.com/api/users/profile",
                 { firstName, lastName },
                 { headers: { Authorization: `Bearer ${token}` } },
             )
@@ -97,6 +96,7 @@ const Profile = () => {
     const handleSavePassword = () => {
         setPwError("");
         setPwSuccess("");
+
         if (newPassword !== confirmPassword) {
             setPwError("New passwords do not match.");
             return;
@@ -105,11 +105,13 @@ const Profile = () => {
             setPwError("Password must be at least 6 characters.");
             return;
         }
+
         setIsSavingPassword(true);
+
         axios
             .put(
-                "https://verseiq-server.onrender.com/api/users/change-password",
-                { currentPassword, newPassword },
+                "https://verseiq-server.onrender.com/api/users/profile", // 👈 same endpoint as info update
+                { currentPassword, newPassword }, // 👈 exact field names backend expects
                 { headers: { Authorization: `Bearer ${token}` } },
             )
             .then(() => {
@@ -122,7 +124,7 @@ const Profile = () => {
             .catch((err) => {
                 setIsSavingPassword(false);
                 setPwError(
-                    err.response?.data?.message ?? "Failed to change password.",
+                    err.response?.data?.error ?? "Failed to change password.",
                 );
             });
     };

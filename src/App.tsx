@@ -8,16 +8,11 @@ import QuizPage from "./pages/QuizPage";
 import QuizHistory from "./pages/QuizHistory";
 import DashboardLayout from "./pages/DashboardLayout";
 import Profile from "./pages/Profile";
-import History from "./pages/History";
 import Leaderboard from "./pages/Leaderboard";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-    // const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
-    //     const token = localStorage.getItem("verseiq_token");
-    //     return token ? element : <Navigate to="/signin" replace />;
-    // };
     return (
         <>
             <AuthProvider>
@@ -29,17 +24,16 @@ const App = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/leaderboard" element={<Leaderboard />} />
-                        <Route path="/history" element={<History />} />
+                        {/* <Route path="/history" element={<History />} /> */}
                         <Route path="/settings" element={<Settings />} />
-                        {/* etc. */}
+                    <Route
+                        path="/history"
+                        element={<ProtectedRoute element={<QuizHistory />} />}
+                    />
                     </Route>
                     <Route
                         path="/quiz"
                         element={<ProtectedRoute element={<QuizPage />} />}
-                    />
-                    <Route
-                        path="/history"
-                        element={<ProtectedRoute element={<QuizHistory />} />}
                     />
                 </Routes>
             </AuthProvider>

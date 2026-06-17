@@ -10,12 +10,12 @@ const TIME_PER_QUESTION: Record<Difficulty, number> = {
     mixed: 10,
 };
 
-const DIFFICULTY_COLORS: Record<Difficulty, string> = {
-    easy: "#10B981",
-    medium: "#F59E0B",
-    hard: "#EF4444",
-    mixed: "#7C3AED",
-};
+// const DIFFICULTY_COLORS: Record<Difficulty, string> = {
+//     easy: "#10B981",
+//     medium: "#F59E0B",
+//     hard: "#EF4444",
+//     mixed: "#7C3AED",
+// };
 
 interface QuizModalProps {
     onClose: () => void;
@@ -68,9 +68,9 @@ const QuizModal = ({
                         <X size={20} />
                     </button>
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                        {/* <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                             <Zap size={20} className="text-white" />
-                        </div>
+                        </div> */}
                         <div>
                             <h2 className="text-white font-bold text-xl">
                                 Configure Quiz
@@ -87,7 +87,7 @@ const QuizModal = ({
                     <div>
                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                             <BookOpen size={15} className="text-[#7C3AED]" />
-                            Source
+                            Select Category
                         </label>
                         <div className="grid grid-cols-3 gap-2">
                             {(["old", "new", "mixed"] as Testament[]).map(
@@ -120,7 +120,12 @@ const QuizModal = ({
                         </label>
                         <div className="grid grid-cols-4 gap-2">
                             {(
-                                ["easy", "medium", "hard", "mixed"] as Difficulty[]
+                                [
+                                    "easy",
+                                    "medium",
+                                    "hard",
+                                    "mixed",
+                                ] as Difficulty[]
                             ).map((level) => (
                                 <button
                                     key={level}
@@ -133,9 +138,7 @@ const QuizModal = ({
                                     style={
                                         difficulty === level
                                             ? {
-                                                  backgroundColor:
-                                                      DIFFICULTY_COLORS[level],
-                                                  boxShadow: `0 4px 12px ${DIFFICULTY_COLORS[level]}40`,
+                                                  backgroundColor: "#7C3AED",
                                               }
                                             : {}
                                     }
@@ -202,7 +205,7 @@ const QuizModal = ({
                                 Starting…
                             </>
                         ) : (
-                            "Let's Go →"
+                            "Let's Go"
                         )}
                     </button>
 

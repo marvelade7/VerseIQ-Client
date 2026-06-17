@@ -62,7 +62,6 @@ const QuizPage = () => {
     useEffect(() => {
         axios
             .post(
-                // "http://localhost:4576/api/questions/by-ids",
                 "https://verseiq-server.onrender.com/api/questions/by-ids",
                 { ids: questionIds },
                 { headers: { Authorization: `Bearer ${token}` } },
