@@ -11,12 +11,13 @@ import Profile from "./pages/Profile";
 import History from "./pages/History";
 import Leaderboard from "./pages/Leaderboard";
 import Settings from "./pages/Settings";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-    const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
-        const token = localStorage.getItem("verseiq_token");
-        return token ? element : <Navigate to="/signin" replace />;
-    };
+    // const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
+    //     const token = localStorage.getItem("verseiq_token");
+    //     return token ? element : <Navigate to="/signin" replace />;
+    // };
     return (
         <>
             <AuthProvider>

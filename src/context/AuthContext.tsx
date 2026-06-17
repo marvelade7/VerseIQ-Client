@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    type ReactNode,
+} from "react";
 
 interface User {
     _id: string;
@@ -37,6 +43,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(
         () => localStorage.getItem("verseiq_token") || null,
     );
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("verseiq_token");
+
+        if (!storedToken) {
+            setIsLoading(false);
+            return;
+        }
+
+        fetch("/api/auth/validate", {
+            headers: { Authorization: `Bearer ${storedToken}` },
+        })
+            .then((res) => {
+                if (!res.ok) logout();
+            })
+            .catch(() => {
+                logout();
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+
+    if (isLoading) return <div>Loading...</div>;
 
     const login = (data: { token: string; user: User }) => {
         setUser(data.user);
