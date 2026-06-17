@@ -1,4 +1,3 @@
-// src/pages/QuizPage.tsx
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
@@ -37,6 +36,7 @@ const QuizPage = () => {
 
     const questionsRef = useRef<Question[]>([]);
     const selectedAnswersRef = useRef<Record<string, string>>({});
+    const handleSubmitRef = useRef<() => void>(() => {});
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,13 +80,13 @@ const QuizPage = () => {
     useEffect(() => {
         if (isLoading) return;
         if (timeLeft <= 0) {
-            handleSubmit(); // auto submit when time runs out
+            handleSubmitRef.current(); // ✅ always calls the latest version
             return;
         }
         const timer = setInterval(() => {
             setTimeLeft((prev) => prev - 1);
         }, 1000);
-        return () => clearInterval(timer); // cleanup on unmount
+        return () => clearInterval(timer);
     }, [timeLeft, isLoading]);
 
     const currentQuestion = questions[currentIndex];
@@ -102,6 +102,8 @@ const QuizPage = () => {
         totalQuestions: number;
         timeTaken: number;
     }>(null);
+    const isTimeUp = timeLeft <= 0;
+    const isQuizOver = !!result || isTimeUp;
 
     // format time as mm:ss
     const formatTime = (seconds: number) => {
@@ -176,6 +178,7 @@ const QuizPage = () => {
                 setIsSubmitting(false);
             });
     };
+    handleSubmitRef.current = handleSubmit;
 
     if (isLoading) {
         return (
@@ -194,9 +197,9 @@ const QuizPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center py-10 px-4">
+        <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center py-6 sm:py-10 px-4">
             {/* Header — progress and timer */}
-            <div className="w-full max-w-2xl flex items-center justify-between mb-6">
+            <div className="w-full max-w-2xl flex items-center justify-between gap-4 mb-5 sm:mb-6">
                 <p className="text-sm text-gray-500 font-medium">
                     Question{" "}
                     <span className="text-[#7C3AED] font-bold">
@@ -209,14 +212,14 @@ const QuizPage = () => {
                 </p>
                 {/* timer turns red when under 30 seconds */}
                 <p
-                    className={`font-bold text-lg ${timeLeft <= 30 ? "text-red-500" : "text-[#7C3AED]"}`}
+                    className={`shrink-0 font-bold text-base sm:text-lg ${timeLeft <= 30 ? "text-red-500" : "text-[#7C3AED]"}`}
                 >
                     ⏱ {formatTime(timeLeft)}
                 </p>
             </div>
 
             {/* Progress bar */}
-            <div className="w-full max-w-2xl bg-gray-200 rounded-full h-2 mb-8">
+            <div className="w-full max-w-2xl bg-gray-200 rounded-full h-2 mb-6 sm:mb-8">
                 <div
                     className="bg-[#7C3AED] h-2 rounded-full transition-all duration-300"
                     style={{
@@ -226,11 +229,11 @@ const QuizPage = () => {
             </div>
 
             {/* Question card */}
-            <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-2xl mb-6">
+            <div className="bg-white shadow-md rounded-xl p-5 sm:p-8 w-full max-w-2xl mb-6">
                 <p className="text-xs text-gray-400 uppercase mb-2 font-medium">
                     {currentQuestion.difficulty} · {currentQuestion.category}
                 </p>
-                <h2 className="text-lg font-semibold text-gray-800 mb-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-6">
                     {currentQuestion.questionText}
                 </h2>
 
@@ -243,11 +246,12 @@ const QuizPage = () => {
                             <button
                                 key={option._id}
                                 onClick={() => handleSelectOption(option._id)}
-                                className={`text-left py-3 px-4 rounded-lg border-2 font-medium transition-all duration-200 ${
+                                disabled={isQuizOver}
+                                className={`text-left py-3 px-4 rounded-lg border-2 text-sm sm:text-base font-medium transition-all duration-200 ${
                                     isSelected
                                         ? "border-[#7C3AED] bg-purple-50 text-[#7C3AED]"
                                         : "border-gray-200 text-gray-700 hover:border-[#7C3AED] hover:bg-purple-50"
-                                }`}
+                                } disabled:opacity-50 disabled:cursor-not-allowed`} 
                             >
                                 {option.optionText}
                             </button>
@@ -257,11 +261,11 @@ const QuizPage = () => {
             </div>
 
             {/* Prev / Next / Submit buttons */}
-            <div className="flex justify-between w-full max-w-2xl">
+            <div className="flex w-full max-w-2xl justify-between gap-3">
                 <button
                     onClick={() => setCurrentIndex((prev) => prev - 1)}
-                    disabled={currentIndex === 0}
-                    className="flex items-center gap-1 py-2 px-5 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    disabled={currentIndex === 0 || isQuizOver}
+                    className="flex items-center justify-center gap-1 py-2 px-4 sm:px-5 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                     <ChevronLeft size={18} /> Prev
                 </button>
@@ -269,8 +273,8 @@ const QuizPage = () => {
                 {isLastQuestion ? (
                     <button
                         onClick={handleSubmit}
-                        disabled={isSubmitting || !hasAnsweredCurrent}
-                        className="flex items-center gap-1 py-2 px-5 rounded-md bg-[#7C3AED] text-white font-semibold hover:bg-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        disabled={isSubmitting || !hasAnsweredCurrent || isQuizOver}
+                        className="flex items-center justify-center gap-1 py-2 px-4 sm:px-5 rounded-md bg-[#7C3AED] text-white font-semibold hover:bg-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                         {isSubmitting ? (
                             <>
@@ -284,22 +288,22 @@ const QuizPage = () => {
                 ) : (
                     <button
                         onClick={() => setCurrentIndex((prev) => prev + 1)}
-                        disabled={!hasAnsweredCurrent} // must answer before moving on
-                        className="flex items-center gap-1 py-2 px-5 rounded-md bg-[#7C3AED] text-white font-semibold hover:bg-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        disabled={!hasAnsweredCurrent || isQuizOver} 
+                        className="flex items-center justify-center gap-1 py-2 px-4 sm:px-5 rounded-md bg-[#7C3AED] text-white font-semibold hover:bg-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                         Next <ChevronRight size={18} />
                     </button>
                 )}
             </div>
             {result && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md mx-4 text-center max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
+                    <div className="bg-white rounded-xl shadow-xl p-5 sm:p-8 w-full max-w-md text-center max-h-[90vh] overflow-y-auto">
                         {!showDetails ? (
                             <>
-                                <h2 className="text-2xl font-bold text-[#7C3AED] mb-4">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#7C3AED] mb-4">
                                     Quiz Complete! 🎉
                                 </h2>
-                                <p className="text-4xl font-bold text-[#7C3AED] mb-2">
+                                <p className="text-3xl sm:text-4xl font-bold text-[#7C3AED] mb-2">
                                     {result.score}%
                                 </p>
                                 <p className="text-gray-600 mb-1">
@@ -338,14 +342,12 @@ const QuizPage = () => {
                                                 (o) =>
                                                     o._id === selectedOptionId,
                                             )?.isCorrect ?? false;
-                                        q.options.find(
-                                            (o) => o.isCorrect,
-                                        );
+                                        q.options.find((o) => o.isCorrect);
 
                                         return (
                                             <div
                                                 key={q._id}
-                                                className={`p-4 rounded-lg border-2 ${
+                                                className={`p-3 sm:p-4 rounded-lg border-2 ${
                                                     isCorrect
                                                         ? "border-green-400 bg-green-50"
                                                         : "border-red-400 bg-red-50"

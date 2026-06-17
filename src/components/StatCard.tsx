@@ -16,16 +16,16 @@ const StatCard = ({
     subtext,
 }: StatCardProps) => {
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-start gap-4">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 flex items-start gap-4">
             <div
                 className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                 style={{ backgroundColor: `${accent}15` }}
             >
                 <Icon size={20} style={{ color: accent }} />
             </div>
-            <div>
+            <div className="min-w-0">
                 <p className="text-gray-500 text-sm mb-0.5">{label}</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 break-words">
                     {value ?? "—"}
                 </p>
                 {subtext && (

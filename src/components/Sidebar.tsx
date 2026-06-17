@@ -27,43 +27,55 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-75 bg-[#ffff] flex flex-col z-40 pt-5 ps-2 shadow-lg">
-        {/* // <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0F0A1E] flex flex-col z-40">  */}
-            {/* Logo */}
-            {/* <div className="px-6 py-6 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-[#7C3AED] rounded-lg flex items-center justify-center">
-                        <Zap size={16} className="text-white" />
-                    </div>
-                    <span className="text-white font-bold text-lg tracking-tight">
-                        Verse<span className="text-[#A78BFA]">IQ</span>
-                    </span>
-                </div>
-            </div> */}
-            <img src="./logo.png" alt="Logo" className="md:w-30 w-30 ms-3" />
+        <aside className="fixed inset-x-0 bottom-0 z-40 flex items-center bg-white px-2 py-2 shadow-[0_-6px_20px_rgba(15,23,42,0.08)] lg:left-0 lg:right-auto lg:top-0 lg:bottom-auto lg:h-screen lg:w-75 lg:flex-col lg:items-stretch lg:px-0 lg:py-0 lg:pt-5 lg:ps-2 lg:shadow-lg">
+            <img
+                src="./logo.png"
+                alt="Logo"
+                className="hidden w-30 ms-3 lg:block"
+            />
 
             {/* Nav */}
-            <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+            <nav className="flex flex-1 items-center justify-around gap-1 overflow-x-auto lg:block lg:space-y-1 lg:overflow-y-auto lg:px-3 lg:py-6">
                 {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
                     <NavLink
                         key={to}
                         to={to}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group ${
+                            `flex min-w-0 flex-1 flex-col items-center gap-1  rounded-lg px-2 py-1 text-[11px] font-medium transition-all duration-300 ease-in-out group sm:text-xs lg:w-full lg:flex-none lg:flex-row lg:gap-3 lg:px-3 lg:py-3 lg:text-sm ${
                                 isActive
-                                    ? "bg-[#7C3AED] text-white shadow-lg shadow-black-25"
-                                    : "text-black hover:text-[#7C3AED] hover:bg-[#7C3AED]/9"
+                                    ? "text-[#7C3AED] font-black -translate-y-1 scale-105"
+                                    : "text-black hover:text-[#7C3AED] hover:bg-[#7C3AED]/90"
                             }`
                         }
                     >
-                        <Icon size={18} className="shrink-0" />
-                        {label}
+                        {(
+                            { isActive },
+                        ) => (
+                            <>
+                                <Icon size={18} className="shrink-0" />
+                                {/* On mobile: only show label when active. On desktop: always show */}
+                                <span
+                                    className={`truncate lg:block scale-105 ${isActive ? "block" : "hidden"}`}
+                                >
+                                    {label}
+                                </span>
+                            </>
+                        )}
                     </NavLink>
                 ))}
             </nav>
 
             {/* User footer */}
-            <div className="px-3 py-4 border-t border-white/10">
+            <button
+                onClick={handleLogout}
+                aria-label="Log out"
+                className="flex flex-col items-center gap-1 rounded-lg px-2 py-2 text-[11px] font-medium text-gray-400 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400 sm:text-xs lg:hidden"
+            >
+                <LogOut size={18} />
+                <span>Log out</span>
+            </button>
+
+            <div className="hidden px-3 py-4 border-t border-white/10 lg:block">
                 <div className="flex items-center gap-3 px-3 py-2 mb-2">
                     <div className="w-8 h-8 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-xs font-bold shrink-0">
                         {user?.firstName?.[0]}

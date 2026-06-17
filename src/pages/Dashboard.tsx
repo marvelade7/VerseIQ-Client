@@ -176,20 +176,20 @@ const Dashboard = () => {
 
     return (
         <>
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
                 <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                     <Sun size={14} />
                     <span>{getGreeting()}</span>
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 wrap-break-word">
                     {user?.firstName} {user?.lastName} 👋
                 </h1>
-                <p className="text-gray-500 mt-1">
+                <p className="text-gray-500 mt-1 text-sm sm:text-base">
                     Ready to test your Biblical knowledge today?
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6 sm:mb-8">
                 <StatCard
                     label="Quizzes Taken"
                     value={user?.totalQuizTaken}
@@ -246,12 +246,12 @@ const Dashboard = () => {
                     <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
                         Did You Know?
                     </h2>
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full">
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 h-full">
                         <div className="space-y-4">
                             {BIBLE_FACTS.map((fact, i) => (
                                 <div
                                     key={i}
-                                    className="flex gap-4 pb-4 border-b border-gray-50 last:border-0 last:pb-0"
+                                    className="flex gap-3 sm:gap-4 pb-4 border-b border-gray-50 last:border-0 last:pb-0"
                                 >
                                     <span className="text-2xl shrink-0">
                                         {fact.emoji}

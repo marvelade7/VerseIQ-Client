@@ -52,15 +52,15 @@ const QuizModal = ({
 
     return (
         <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4"
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden"
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative max-h-[calc(100vh-1.5rem)] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] px-8 py-6">
+                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] px-5 py-5 sm:px-8 sm:py-6">
                     <button
                         onClick={onClose}
                         className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
@@ -72,7 +72,7 @@ const QuizModal = ({
                             <Zap size={20} className="text-white" />
                         </div> */}
                         <div>
-                            <h2 className="text-white font-bold text-xl">
+                            <h2 className="text-white font-bold text-lg sm:text-xl">
                                 Configure Quiz
                             </h2>
                             <p className="text-white/70 text-sm">
@@ -82,20 +82,20 @@ const QuizModal = ({
                     </div>
                 </div>
 
-                <div className="px-8 py-6 space-y-6">
+                <div className="px-5 py-5 space-y-5 sm:px-8 sm:py-6 sm:space-y-6">
                     {/* Testament */}
                     <div>
                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                             <BookOpen size={15} className="text-[#7C3AED]" />
                             Select Category
                         </label>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                             {(["old", "new", "mixed"] as Testament[]).map(
                                 (t) => (
                                     <button
                                         key={t}
                                         onClick={() => setTestament(t)}
-                                        className={`py-2.5 rounded-xl text-sm font-medium transition-all duration-200 border ${
+                                        className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
                                             testament === t
                                                 ? "bg-[#7C3AED] text-white border-[#7C3AED] shadow-md shadow-purple-200"
                                                 : "bg-gray-50 text-gray-600 border-gray-200 hover:border-[#7C3AED] hover:text-[#7C3AED]"
@@ -118,7 +118,7 @@ const QuizModal = ({
                             <Zap size={15} className="text-[#7C3AED]" />
                             Difficulty
                         </label>
-                        <div className="grid grid-cols-4 gap-2">
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                             {(
                                 [
                                     "easy",
@@ -183,7 +183,7 @@ const QuizModal = ({
                             <p className="text-xs text-gray-500">
                                 Estimated time
                             </p>
-                            <p className="text-xl font-bold text-[#7C3AED]">
+                            <p className="text-lg sm:text-xl font-bold text-[#7C3AED]">
                                 {timeDisplay}
                             </p>
                             <p className="text-xs text-gray-400">

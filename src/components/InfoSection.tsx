@@ -1,6 +1,6 @@
 const InfoSection = () => {
     return (
-        <div className='grid md:grid-cols-3 grid-cols-1 gap-5 lg:px-20 md:px-10 px-5 pt-10 sm:pb-30 pb-20'>
+        <div className='grid md:grid-cols-3 grid-cols-1 gap-5 lg:px-20 md:px-10 px-5 pt-8 sm:pt-10 sm:pb-30 pb-16'>
             <div className='border rounded-lg py-5 px-6 hover:shadow-lg duration-100 hover:border-[#7C3AED]'>
                 <i className="bi bi-mortarboard text-2xl py-2 px-3 bg-[#d9d1e7] text-[#7C3AED] rounded-full"></i>
                 <h4 className="mt-9 text-xl font-medium mb-4">3 Difficulty Levels</h4>

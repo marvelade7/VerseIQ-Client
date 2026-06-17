@@ -61,15 +61,15 @@ const SettingRow = ({
     children?: React.ReactNode;
     danger?: boolean;
 }) => (
-    <div className="flex items-center justify-between py-4 border-b border-gray-50 last:border-0">
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-3 py-4 border-b border-gray-50 last:border-0 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
             <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                 style={{ backgroundColor: danger ? "#FEF2F2" : `${iconColor}15` }}
             >
                 <Icon size={16} style={{ color: danger ? "#EF4444" : iconColor }} />
             </div>
-            <div>
+            <div className="min-w-0">
                 <p className={`text-sm font-medium ${danger ? "text-red-500" : "text-gray-800"}`}>
                     {label}
                 </p>
@@ -78,12 +78,12 @@ const SettingRow = ({
                 )}
             </div>
         </div>
-        <div className="shrink-0 ml-4">{children}</div>
+        <div className="shrink-0 sm:ml-4">{children}</div>
     </div>
 );
 
 const Card = ({ children }: { children: React.ReactNode }) => (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-2 mb-6">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 sm:px-6 py-2 mb-6">
         {children}
     </div>
 );
@@ -102,7 +102,7 @@ const SelectField = ({
     <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/30 focus:border-[#7C3AED] bg-white"
+        className="w-full sm:w-auto text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/30 focus:border-[#7C3AED] bg-white"
     >
         {options.map((o) => (
             <option key={o.value} value={o.value}>
@@ -120,7 +120,7 @@ const DeleteModal = ({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
         onClick={onCancel}
     >
         <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5 sm:p-8"
             onClick={(e) => e.stopPropagation()}
         >
             <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
@@ -131,7 +131,7 @@ const DeleteModal = ({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
                 This will permanently delete your account, all quiz history, and stats.
                 This action <span className="font-semibold text-gray-800">cannot be undone</span>.
             </p>
-            <div className="flex gap-3 mt-7">
+            <div className="flex flex-col sm:flex-row gap-3 mt-7">
                 <button
                     onClick={onCancel}
                     className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
@@ -153,7 +153,7 @@ const DeleteModal = ({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
 
 const SavedToast = ({ visible }: { visible: boolean }) => (
     <div
-        className={`fixed bottom-6 right-6 flex items-center gap-2 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-xl transition-all duration-300 z-50 ${
+        className={`fixed bottom-24 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 flex items-center justify-center gap-2 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-xl transition-all duration-300 z-50 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
         }`}
     >
@@ -215,9 +215,9 @@ const Settings = () => {
 
     return (
         <>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-                <p className="text-gray-500 mt-1">Manage your preferences and account options.</p>
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Settings</h1>
+                <p className="text-gray-500 mt-1 text-sm sm:text-base">Manage your preferences and account options.</p>
             </div>
 
             {/* ── Notifications ── */}

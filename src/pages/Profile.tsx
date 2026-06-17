@@ -131,32 +131,32 @@ const Profile = () => {
 
     return (
         <div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-                <p className="text-gray-500 mt-1">
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Profile</h1>
+                <p className="text-gray-500 mt-1 text-sm sm:text-base">
                     Manage your account information and password.
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 {/* Left: avatar + stats */}
-                <div className="lg:col-span-1 space-y-4">
+                <div className="xl:col-span-1 space-y-4">
                     {/* Avatar card */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center text-center">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 flex flex-col items-center text-center">
                         <div className="w-20 h-20 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-2xl font-bold mb-4">
                             {user?.firstName?.[0]}
                             {user?.lastName?.[0]}
                         </div>
-                        <p className="font-bold text-gray-900 text-lg">
+                        <p className="font-bold text-gray-900 text-lg wrap-break-word">
                             {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-gray-400 text-sm mt-0.5">
+                        <p className="text-gray-400 text-sm mt-0.5 break-all">
                             {user?.email}
                         </p>
                     </div>
 
                     {/* Stats */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 space-y-4">
                         <h3 className="font-semibold text-gray-700 text-sm">
                             Your Stats
                         </h3>
@@ -204,15 +204,15 @@ const Profile = () => {
                 </div>
 
                 {/* Right: forms */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="xl:col-span-2 space-y-6">
                     {/* Personal info */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
                         <h2 className="font-bold text-gray-900 mb-5 flex items-center gap-2">
                             <User size={18} className="text-[#7C3AED]" />
                             Personal Information
                         </h2>
                         <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <InputField
                                     label="First Name"
                                     icon={User}
@@ -252,7 +252,7 @@ const Profile = () => {
                         <button
                             onClick={handleSaveInfo}
                             disabled={isSavingInfo}
-                            className="mt-5 flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="mt-5 flex w-full sm:w-auto items-center justify-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSavingInfo ? (
                                 <Loader2 size={15} className="animate-spin" />
@@ -264,7 +264,7 @@ const Profile = () => {
                     </div>
 
                     {/* Change password */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
                         <h2 className="font-bold text-gray-900 mb-5 flex items-center gap-2">
                             <Lock size={18} className="text-[#7C3AED]" />
                             Change Password
@@ -310,7 +310,7 @@ const Profile = () => {
                         <button
                             onClick={handleSavePassword}
                             disabled={isSavingPassword}
-                            className="mt-5 flex items-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="mt-5 flex w-full sm:w-auto items-center justify-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSavingPassword ? (
                                 <Loader2 size={15} className="animate-spin" />

@@ -91,20 +91,20 @@ const History = () => {
 
     return (
         <div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Quiz History</h1>
-                <p className="text-gray-500 mt-1">A record of every quiz you've completed.</p>
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Quiz History</h1>
+                <p className="text-gray-500 mt-1 text-sm sm:text-base">A record of every quiz you've completed.</p>
             </div>
 
             {/* Summary strip */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
                 {[
                     { label: "Total Quizzes", value: sessions.length },
                     { label: "Passed", value: sessions.filter((s) => s.passed).length },
                     { label: "Pass Rate", value: `${passRate}%` },
                 ].map(({ label, value }) => (
-                    <div key={label} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center">
-                        <p className="text-2xl font-bold text-[#7C3AED]">{value}</p>
+                    <div key={label} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm text-center">
+                        <p className="text-xl sm:text-2xl font-bold text-[#7C3AED]">{value}</p>
                         <p className="text-sm text-gray-500 mt-0.5">{label}</p>
                     </div>
                 ))}
@@ -117,7 +117,7 @@ const History = () => {
             )}
 
             {/* Filter tabs */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4">
                 {(["all", "passed", "failed"] as const).map((f) => (
                     <button
                         key={f}
@@ -135,7 +135,7 @@ const History = () => {
 
             {/* List */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-50 flex items-center gap-2">
                     <HistoryIcon size={18} className="text-[#7C3AED]" />
                     <h2 className="font-semibold text-gray-800">Sessions</h2>
                     <span className="ml-auto text-xs text-gray-400">{filtered.length} results</span>
@@ -158,44 +158,51 @@ const History = () => {
                             return (
                                 <div key={session._id}>
                                     <button
-                                        className="w-full grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 transition-colors text-left"
+                                        className="w-full grid grid-cols-[auto_1fr_auto_auto] gap-3 px-4 py-4 items-center hover:bg-gray-50 transition-colors text-left sm:grid-cols-12 sm:gap-0 sm:px-6"
                                         onClick={() =>
                                             setExpandedId(isExpanded ? null : session._id)
                                         }
                                     >
-                                        <div className="col-span-1">
+                                        <div className="sm:col-span-1">
                                             {session.passed ? (
                                                 <CheckCircle2 size={20} className="text-green-500" />
                                             ) : (
                                                 <XCircle size={20} className="text-red-400" />
                                             )}
                                         </div>
-                                        <div className="col-span-4">
-                                            <p className="font-semibold text-gray-900 text-sm">
+                                        <div className="min-w-0 sm:col-span-4">
+                                            <p className="font-semibold text-gray-900 text-sm wrap-break-word">
                                                 {session.category}
                                             </p>
                                             <p className="text-xs text-gray-400 mt-0.5">
                                                 {formatDate(session.createdAt)}
                                             </p>
+                                            <div className="mt-2 flex flex-wrap items-center gap-2 sm:hidden">
+                                                <DifficultyBadge level={session.difficulty} />
+                                                <span className="flex items-center gap-1 text-xs text-gray-500">
+                                                    <Clock size={12} />
+                                                    {formatTime(session.timeTaken)}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div className="col-span-2">
+                                        <div className="hidden sm:block sm:col-span-2">
                                             <DifficultyBadge level={session.difficulty} />
                                         </div>
-                                        <div className="col-span-3 flex items-center gap-1.5 text-sm text-gray-500">
+                                        <div className="hidden sm:col-span-3 sm:flex items-center gap-1.5 text-sm text-gray-500">
                                             <Clock size={13} />
                                             {formatTime(session.timeTaken)}
                                         </div>
-                                        <div className="col-span-1">
+                                        <div className="sm:col-span-1">
                                             <ScoreRing score={session.score} total={session.totalQuestions} />
                                         </div>
-                                        <div className="col-span-1 flex justify-end text-gray-300">
+                                        <div className="flex justify-end text-gray-300 sm:col-span-1">
                                             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                                         </div>
                                     </button>
 
                                     {isExpanded && (
-                                        <div className="px-6 pb-4 bg-gray-50 border-t border-gray-100">
-                                            <div className="grid grid-cols-3 gap-4 pt-4">
+                                        <div className="px-4 sm:px-6 pb-4 bg-gray-50 border-t border-gray-100">
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4">
                                                 {[
                                                     { label: "Score", value: `${session.score} / ${session.totalQuestions}` },
                                                     { label: "Time Taken", value: formatTime(session.timeTaken) },

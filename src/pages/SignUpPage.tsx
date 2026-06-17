@@ -89,7 +89,7 @@ const SignUpPage = () => {
         length: password.length >= 6,
     };
     return (
-        <div className="flex items-center bg-[#F9FAFB]">
+        <div className="flex min-h-screen items-stretch bg-[#F9FAFB]">
             <AuthLeftSection
                 heading={"Deepen Your Understanding of Scripture"}
                 description={
@@ -100,17 +100,17 @@ const SignUpPage = () => {
                 }
                 verse={"- Psalm 119:105"}
             />
-            <div className=" md:w-1/2 bg-white w-full h-screen lg:py-10 py-10 px-10">
+            <div className="md:w-1/2 bg-white w-full min-h-screen md:h-screen overflow-y-auto lg:py-10 py-8 sm:py-10 px-4 sm:px-8 lg:px-10">
                 <form
                     action=""
                     onSubmit={formik.handleSubmit}
-                    className="shadow-md md:w-xl w-full mx-auto md:px-10 px-5 bg-white py-10 rounded-lg"
+                    className="shadow-md w-full max-w-xl mx-auto md:px-10 px-5 bg-white py-8 sm:py-10 rounded-lg"
                 >
                     <h1 className="md:text-2xl text-xl md:mb-10 mb-7 font-semibold text-[#7C3AED] ">
                         Get Started With VerseIQ
                     </h1>
                     <div className="flex md:flex-row md:gap-5 gap-2 flex-col mb-3  w-full">
-                        <div className="flex flex-col mb-  md:w-1/2 w-full">
+                        <div className="flex flex-col md:w-1/2 w-full">
                             <label
                                 htmlFor="firstName"
                                 className="mb-3 text-sm sm:text-md font-medium"
@@ -122,7 +122,7 @@ const SignUpPage = () => {
                                 id="firstName"
                                 placeholder="John"
                                 name="firstName"
-                                className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
+                                className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.firstName}
@@ -147,7 +147,7 @@ const SignUpPage = () => {
                                 id="lastName"
                                 placeholder="Doe"
                                 name="lastName"
-                                className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
+                                className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.lastName}
@@ -173,7 +173,7 @@ const SignUpPage = () => {
                             id="email"
                             placeholder="john.doe@example.com"
                             name="email"
-                            className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
+                            className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.email}
@@ -197,7 +197,7 @@ const SignUpPage = () => {
                             id="username"
                             placeholder="johndoe7"
                             name="username"
-                            className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
+                            className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.username}
@@ -223,7 +223,7 @@ const SignUpPage = () => {
                                     id="password"
                                     placeholder="••••••••"
                                     name="password"
-                                    className="border-none focus:border-0 focus:ring-0 focus:outline-0"
+                                    className="w-full min-w-0 border-none focus:border-0 focus:ring-0 focus:outline-0"
                                     onChange={formik.handleChange}
                                     onBlur={(e) => {
                                         formik.handleBlur(e);
@@ -339,7 +339,7 @@ const SignUpPage = () => {
                                 id="confirmPassword"
                                 placeholder="••••••••"
                                 name="confirmPassword"
-                                className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
+                                className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.confirmPassword}
@@ -352,18 +352,18 @@ const SignUpPage = () => {
                                 )}
                         </div>
                     </div>
-                    <div className="flex items-center mb-6">
+                    <div className="flex items-start gap-2 mb-6 flex-wrap">
                         <input
                             type="checkbox"
                             id="terms"
-                            className="mr-2"
+                            className="mt-1 shrink-0"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             // value={formik.values.terms}
                         />
                         <label
                             htmlFor="terms"
-                            className="text-center text-[.8em] sm:text-sm"
+                            className="flex-1 text-left text-[.8em] sm:text-sm"
                         >
                             I agree to the{" "}
                             <a
@@ -381,7 +381,7 @@ const SignUpPage = () => {
                             </a>
                         </label>
                         {formik.touched.terms && formik.errors.terms && (
-                            <small className="text-red-500 mb-3">
+                            <small className="w-full text-red-500 mb-3">
                                 {formik.errors.terms}
                             </small>
                         )}
