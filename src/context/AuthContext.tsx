@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import {
     createContext,
     useContext,
@@ -69,7 +70,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
     }, []);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading)
+        return (
+            <div className="flex items-center justify-center py-20 md:py-40 lg:py-60">
+                <Loader2 size={28} className="animate-spin text-[#7C3AED] " />
+            </div>
+        );
 
     const login = (data: { token: string; user: User }) => {
         setUser(data.user);
