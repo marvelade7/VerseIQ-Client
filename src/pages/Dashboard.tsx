@@ -177,8 +177,8 @@ const Dashboard = () => {
     return (
         <>
             <div className="mb-6 sm:mb-8">
-                <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
-                    <Sun size={14} />
+                <div className="flex items-center gap-2 text-gray-400 text-md mb-1">
+                    <Sun size={19} />
                     <span>{getGreeting()}</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 wrap-break-word">
