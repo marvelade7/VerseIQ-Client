@@ -41,9 +41,9 @@ const Sidebar = () => {
                         key={to}
                         to={to}
                         className={({ isActive }) =>
-                            `flex min-w-0 flex-1 flex-col items-center gap-1  rounded-lg px-2 py-1 text-[11px] font-medium transition-all duration-300 ease-in-out group sm:text-xs lg:w-full lg:flex-none lg:flex-row lg:gap-3 lg:px-3 lg:py-3 lg:text-sm ${
+                            `flex min-w-0 flex-1 flex-col items-center gap-1 px-2 py-1 text-[11px] font-medium transition-all duration-300 ease-in-out group sm:text-xs lg:w-full lg:flex-none lg:flex-row lg:gap-3 lg:px-3 lg:py-3 lg:text-sm ${
                                 isActive
-                                    ? "text-[#7C3AED] font-black -translate-y-1 scale-105"
+                                    ? "text-[#7C3AED] font-black border-b-2 -translate-y-1 scale-105"
                                     : "text-black hover:text-[#7C3AED] hover:bg-[#7C3AED]/90"
                             }`
                         }

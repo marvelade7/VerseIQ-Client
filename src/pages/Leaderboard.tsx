@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import { Trophy, Medal, Crown, Loader2, TrendingUp } from "lucide-react";
+import { Trophy, Medal, Crown, Loader2 } from "lucide-react";
 
 interface LeaderboardEntry {
     rank: number;
     firstName: string;
     lastName: string;
-    bestScore: number;
-    totalQuizTaken: number;
-    longestStreak: number;
+    username: string;
+    totalPoints: number;
+    quizzesCompleted: number;
+    highestStreak: number;
+    averageAccuracy: number;
+    totalCorrectAnswers: number;
+    totalQuestions: number;
 }
 
 const RankBadge = ({ rank }: { rank: number }) => {
@@ -47,42 +51,46 @@ const Leaderboard = () => {
 
     useEffect(() => {
         axios
-            .get("https://verseiq-server.onrender.com/api/leaderboard", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+            .get(
+                "https://verseiq-server.onrender.com/api/quiz-sessions/leaderboard",
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                },
+            )
             .then((res) => {
-                setEntries(res.data.data || []);
+                setEntries(res.data || []);
                 setIsLoading(false);
             })
             .catch(() => {
-                // Fallback mock data so UI is visible even without API
-                setEntries(MOCK_ENTRIES);
                 setIsLoading(false);
-                setError("Could not load live data — showing sample leaderboard.");
+                setError(
+                    "Could not load live data — showing sample leaderboard.",
+                );
             });
     }, []);
 
     const currentUserRank =
-        entries.findIndex(
-            (e) => e.firstName === user?.firstName && e.lastName === user?.lastName,
-        ) + 1;
+        entries.findIndex((e) => e.username === user?.username) + 1;
 
     return (
         <div>
             {/* Header */}
             <div className="mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Leaderboard</h1>
-                <p className="text-gray-500 mt-1 text-sm sm:text-base">See how you rank against other players globally.</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Leaderboard
+                </h1>
+                <p className="text-gray-500 mt-1 text-sm sm:text-base">
+                    See how you rank against other players globally.
+                </p>
             </div>
 
             {/* Your rank banner */}
             {currentUserRank > 0 && (
-                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] rounded-2xl p-4 sm:p-5 mb-6 flex items-center gap-4 text-white shadow-lg shadow-purple-200">
-                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                        <TrendingUp size={22} />
-                    </div>
+                <div className="bg-linear-to-r from-[#7C3AED] to-[#9F67FA] rounded-2xl py-4 px-6 sm:p-5 mb-6 flex items-center gap-4 text-white shadow-lg shadow-purple-200">
                     <div>
-                        <p className="text-white/70 text-sm">Your current rank</p>
+                        <p className="text-white/70 text-sm">
+                            Your current rank
+                        </p>
                         <p className="text-2xl font-bold">#{currentUserRank}</p>
                     </div>
                 </div>
@@ -95,89 +103,76 @@ const Leaderboard = () => {
             )}
 
             {/* Table */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-gray-50 flex items-center gap-2">
-                    <Trophy size={18} className="text-[#7C3AED]" />
-                    <h2 className="font-semibold text-gray-800">Top Players</h2>
+<div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="px-4 sm:px-6 py-4 border-b border-gray-50 flex items-center gap-2">
+        <Trophy size={18} className="text-[#7C3AED]" />
+        <h2 className="font-semibold text-gray-800">Top Players</h2>
+    </div>
+
+    {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+            <Loader2 size={28} className="animate-spin text-[#7C3AED]" />
+        </div>
+    ) : (
+        <div className="overflow-x-auto">
+            <div className="min-w-150 divide-y divide-gray-50">
+                {/* Column headers */}
+                <div className="grid grid-cols-12 px-6 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/60">
+                    <div className="col-span-1">Rank</div>
+                    <div className="col-span-4">Player</div>
+                    <div className="col-span-2 text-center">Points</div>
+                    <div className="col-span-3 text-center">Quizzes</div>
+                    <div className="col-span-2 text-center">Streak</div>
                 </div>
 
-                {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 size={28} className="animate-spin text-[#7C3AED]" />
-                    </div>
-                ) : (
-                    <div className="divide-y divide-gray-50">
-                        {/* Column headers */}
-                        <div className="hidden sm:grid grid-cols-12 px-6 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/60">
-                            <div className="col-span-1">Rank</div>
-                            <div className="col-span-4">Player</div>
-                            <div className="col-span-2 text-center">Best Score</div>
-                            <div className="col-span-3 text-center">Quizzes</div>
-                            <div className="col-span-2 text-center">Streak</div>
-                        </div>
-
-                        {entries.map((entry, i) => {
-                            const isMe =
-                                entry.firstName === user?.firstName &&
-                                entry.lastName === user?.lastName;
-                            return (
-                                <div
-                                    key={i}
-                                    className={`grid grid-cols-[auto_1fr_auto] gap-3 px-4 py-4 items-center transition-colors sm:grid-cols-12 sm:gap-0 sm:px-6 ${
-                                        isMe
-                                            ? "bg-purple-50 border-l-4 border-l-[#7C3AED]"
-                                            : "hover:bg-gray-50"
-                                    }`}
-                                >
-                                    <div className="sm:col-span-1">
-                                        <RankBadge rank={entry.rank} />
-                                    </div>
-                                    <div className="min-w-0 flex items-center gap-3 sm:col-span-4">
-                                        <div className="w-9 h-9 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-xs font-bold shrink-0">
-                                            {entry.firstName[0]}
-                                            {entry.lastName[0]}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="font-semibold text-gray-900 text-sm break-words">
-                                                {entry.firstName} {entry.lastName}
-                                                {isMe && (
-                                                    <span className="ml-2 inline-flex text-xs bg-[#7C3AED] text-white px-1.5 py-0.5 rounded-full">
-                                                        You
-                                                    </span>
-                                                )}
-                                            </p>
-                                            <p className="mt-1 text-xs text-gray-500 sm:hidden">
-                                                {entry.totalQuizTaken} quizzes · {entry.longestStreak} streak
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="text-right font-bold text-[#7C3AED] sm:col-span-2 sm:text-center">
-                                        {entry.bestScore}
-                                    </div>
-                                    <div className="hidden sm:block sm:col-span-3 text-center text-gray-600 text-sm">
-                                        {entry.totalQuizTaken}
-                                    </div>
-                                    <div className="hidden sm:block sm:col-span-2 text-center text-sm text-gray-600">
-                                        🔥 {entry.longestStreak}
-                                    </div>
+                {entries.map((entry, i) => {
+                    const isMe = entry.username === user?.username;
+                    return (
+                        <div
+                            key={i}
+                            className={`grid grid-cols-12 gap-0 px-6 py-4 items-center transition-colors ${
+                                isMe
+                                    ? "bg-purple-50 border-l-4 border-l-[#7C3AED]"
+                                    : "hover:bg-gray-50"
+                            }`}
+                        >
+                            <div className="col-span-1">
+                                <RankBadge rank={entry.rank} />
+                            </div>
+                            <div className="min-w-0 flex items-center gap-3 col-span-4">
+                                <div className="w-9 h-9 rounded-full bg-linear-to-br from-[#7C3AED] to-[#A78BFA] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                    {entry.firstName[0]}
+                                    {entry.lastName[0]}
                                 </div>
-                            );
-                        })}
-                    </div>
-                )}
+                                <div className="min-w-0">
+                                    <p className="font-semibold text-gray-900 text-sm truncate">
+                                        {entry.username}
+                                        {isMe && (
+                                            <span className="ml-2 inline-flex text-xs bg-[#7C3AED] text-white px-1.5 py-0.5 rounded-full">
+                                                You
+                                            </span>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="col-span-2 text-center font-bold text-[#7C3AED]">
+                                {entry.totalPoints} pts
+                            </div>
+                            <div className="col-span-3 text-center text-gray-600 text-sm">
+                                {entry.quizzesCompleted}
+                            </div>
+                            <div className="col-span-2 text-center text-sm text-gray-600">
+                                {entry.highestStreak}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
+        </div>
+    )}
+</div>
         </div>
     );
 };
-
-const MOCK_ENTRIES: LeaderboardEntry[] = [
-    { rank: 1, firstName: "David", lastName: "Okonkwo", bestScore: 98, totalQuizTaken: 87, longestStreak: 21 },
-    { rank: 2, firstName: "Grace", lastName: "Adeyemi", bestScore: 95, totalQuizTaken: 74, longestStreak: 15 },
-    { rank: 3, firstName: "Samuel", lastName: "Obi", bestScore: 92, totalQuizTaken: 63, longestStreak: 12 },
-    { rank: 4, firstName: "Faith", lastName: "Eze", bestScore: 89, totalQuizTaken: 58, longestStreak: 9 },
-    { rank: 5, firstName: "Emmanuel", lastName: "Bello", bestScore: 86, totalQuizTaken: 45, longestStreak: 7 },
-    { rank: 6, firstName: "Ruth", lastName: "Nwosu", bestScore: 83, totalQuizTaken: 40, longestStreak: 6 },
-    { rank: 7, firstName: "Joshua", lastName: "Afolabi", bestScore: 80, totalQuizTaken: 35, longestStreak: 5 },
-];
 
 export default Leaderboard;
