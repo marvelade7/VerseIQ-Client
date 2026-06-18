@@ -54,6 +54,8 @@ const SignUpPage = () => {
             username: yup
                 .string()
                 .min(4, "Username must be at least 4 characters")
+                .matches(/^[^@]+$/, "Username cannot contain @")
+                .matches(/^\S*$/, "Username cannot contain spaces")
                 .required("Username is required"),
             password: yup
                 .string()
@@ -404,8 +406,11 @@ const SignUpPage = () => {
                         </button>
                     )}
                     <p className="text-center text-sm text-gray-600">
-                        Already have an account?{' '}
-                        <Link to="/signin" className="text-[#7C3AED] hover:underline">
+                        Already have an account?{" "}
+                        <Link
+                            to="/signin"
+                            className="text-[#7C3AED] hover:underline"
+                        >
                             Sign in
                         </Link>
                     </p>

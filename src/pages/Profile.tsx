@@ -60,6 +60,7 @@ const Profile = () => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [username, setUsername] = useState(user?.username ?? "");
 
     const [isSavingInfo, setIsSavingInfo] = useState(false);
     const [isSavingPassword, setIsSavingPassword] = useState(false);
@@ -74,8 +75,9 @@ const Profile = () => {
         setIsSavingInfo(true);
         axios
             .put(
+                // "http://localhost:4576/api/users/profile",
                 "https://verseiq-server.onrender.com/api/users/profile",
-                { firstName, lastName },
+                { firstName, lastName, username },
                 { headers: { Authorization: `Bearer ${token}` } },
             )
             .then((res) => {
@@ -226,6 +228,13 @@ const Profile = () => {
                                     value={lastName}
                                     onChange={setLastName}
                                     placeholder="Last name"
+                                />
+                                <InputField
+                                    label="Username"
+                                    icon={User}
+                                    value={username}
+                                    onChange={setUsername}
+                                    placeholder="Username"
                                 />
                             </div>
                             <InputField

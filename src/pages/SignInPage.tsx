@@ -8,19 +8,20 @@ import { useAuth } from "../context/AuthContext";
 const SignInPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [email, setEmail] = useState("");
+    const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const { login } = useAuth();
     const signIn = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const credentials = { email, password };
+        const credentials = { identifier, password };
         setIsLoading(true);
         setError("");
 
         axios
             .post(
+                // "http://localhost:4576/api/users/login",
                 "https://verseiq-server.onrender.com/api/users/login",
                 credentials,
             )
@@ -69,13 +70,13 @@ const SignInPage = () => {
                             Email
                         </label>
                         <input
-                            type="email"
+                            type="text"
                             id="email"
                             placeholder="john.doe@example.com"
                             name="email"
                             className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:ring-[#7C3AED]"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
                         />
                     </div>
 

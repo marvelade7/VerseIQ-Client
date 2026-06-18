@@ -83,7 +83,8 @@ const Sidebar = () => {
                     </div>
                     <div className="overflow-hidden">
                         <p className="text-black text-sm font-medium truncate">
-                            {user?.firstName} {user?.lastName}
+                            {user?.username} 
+                            {/* {user?.firstName} {user?.lastName} */}
                         </p>
                         <p className="text-gray-500 text-xs truncate">
                             {user?.email}
