@@ -370,7 +370,6 @@ const QuizHistory = () => {
                     <div className="divide-y divide-gray-50">
                         {filtered.map((session, index) => {
                             const isExpanded = expandedId === session._id;
-                            // const passed = session.score >= 70;
                             return (
                                 <div key={session._id}>
                                     <button
@@ -439,11 +438,11 @@ const QuizHistory = () => {
                                                         label: "Result",
                                                         value:
                                                             session.score >= 70
-                                                                ? "Passed ✅"
+                                                                ? "Passed"
                                                                 : session.score >=
                                                                     40
-                                                                  ? "Average 🟡"
-                                                                  : "Failed ❌",
+                                                                  ? "Average"
+                                                                  : "Failed",
                                                     },
                                                 ].map(({ label, value }) => (
                                                     <div

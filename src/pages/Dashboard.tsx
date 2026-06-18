@@ -40,10 +40,10 @@ const ActionCard = ({
 }) => (
     <button
         onClick={onClick}
-        className={`w-full text-left rounded-2xl p-6 flex items-start gap-4 transition-all duration-200 group border ${
+        className={`w-full text-left rounded-2xl p-6 flex cursor-pointer items-start gap-4 transition-all duration-200 group border ${
             variant === "primary"
-                ? "bg-linear-to-br from-[#7C3AED] to-[#9F67FA] border-transparent text-white shadow-lg shadow-purple-200 hover:shadow-xl hover:shadow-purple-300 hover:-translate-y-0.5"
-                : "bg-white border-gray-100 text-gray-800 shadow-sm hover:shadow-md hover:border-[#7C3AED]/30 hover:-translate-y-0.5"
+                ? "bg-linear-to-br from-[#7C3AED] to-[#9F67FA] border-transparent text-white hover:-translate-y-0.5"
+                : "bg-white border-gray-100 text-gray-800 hover:-translate-y-0.5"
         }`}
     >
         <div
@@ -198,21 +198,21 @@ const Dashboard = () => {
                 />
                 <StatCard
                     label="Best Score"
-                    value={user?.bestScore}
+                    value={` ${user?.bestScore}%`}
                     icon={Star}
                     accent="#F59E0B"
                     subtext="Personal record"
                 />
                 <StatCard
-                    label="Longest Streak"
+                    label="Best Streak"
                     value={
                         user?.longestStreak
-                            ? `${user.longestStreak} days`
+                            ? `${user.longestStreak}`
                             : undefined
                     }
                     icon={Flame}
                     accent="#EF4444"
-                    subtext="Keep it going!"
+                    subtext="Consecutive correct answers" 
                 />
             </div>
 
